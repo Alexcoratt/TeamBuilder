@@ -1,5 +1,8 @@
 # build files
 build*
 
+# cache files
+.cache
+
 # compile commands
 compile_commands.json
