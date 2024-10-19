@@ -4,7 +4,7 @@
 #include "graph.h"
 
 std::ostream &operator<<(std::ostream &, const Graph &);
-int fillGraph(Graph &, std::istream &);
+int fill(Graph &, std::istream &);
 
 int main(int argc, char **argv) {
     std::istream *input = nullptr;
@@ -29,7 +29,10 @@ int main(int argc, char **argv) {
     }
 
     Graph gr(vertexCount);
-    fillGraph(gr, *input);
+    int res = fill(gr, *input);
+
+    if (res != 0)
+        return res;
     
     if (input != &std::cin) delete input;
 
@@ -49,8 +52,8 @@ std::ostream &operator<<(std::ostream &out, const Graph &gr) {
     return out;
 }
 
-int fillGraph(Graph &gr, std::istream &input) {
-    Graph::weight_t weight = 0;
+int fill(Graph &gr, std::istream &input) {
+    Graph::weight_t weight = 1;
     Graph::grsize_t firstVertex = 0, secondVertex = 0;
     char delimiter = '\0';
 
@@ -71,7 +74,7 @@ int fillGraph(Graph &gr, std::istream &input) {
                     break;
                 case '/':
                     ++firstVertex;
-                    weight = 0;
+                    weight = 1;
                     break;
                 default:
                     std::cerr << "Error: unknown delimiter \'" << delimiter << "\'\n";
