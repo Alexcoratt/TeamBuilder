@@ -1,49 +1,39 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <unordered_set> // TODO: replace with unordered_map
-#include <utility>
-#include <functional>
+#include <vector>
+#include <float.h>
 
-class GraphNode {
+class Graph {
 public:
+    using grsize_t = std::size_t;
     using weight_t = float;
 
-private:
-    using noderef_t = std::pair<weight_t, GraphNode *>;
-    
-    class NodeRefHash { std::size_t operator()(const noderef_t &); };
+    constexpr static weight_t ERR_WEIGHT = FLT_MIN;
 
-public:
-    using traverse_func = std::function<void(weight_t, GraphNode *)>;
-    using const_traverse_func = std::function<void(weight_t, const GraphNode *)>;
+    // constructors
+        Graph(grsize_t vertexCount = 0);
 
-    // constructor
-    GraphNode();
+        Graph(const Graph &);
+        Graph(Graph &&);
 
-    // each GraphNode is an essential part of a graph,
-    // so it can neither be copied nor moved 
-    GraphNode(const GraphNode &) = delete;
-    GraphNode(GraphNode &&) = delete;
-
-    GraphNode &operator=(const GraphNode &) = delete;
-    GraphNode &operator=(GraphNode &&) = delete;
+    // assignment
+        Graph &operator=(const Graph &);
+        Graph &operator=(Graph &&);
 
     // editing
-    void pushNeighbour(weight_t, GraphNode *);
-    void popNeighbour(GraphNode *);
-
-    void setNeighbourWeight(const GraphNode *);
+        // returns false if any of vertices is out of the range
+        bool setWeight(grsize_t firstVertex, grsize_t secondVertex, weight_t);
 
     // getting
-    weight_t getNeighbourWeight(const GraphNode *) const;
+        grsize_t getVertexCount() const;
 
-    // auxillary
-    void traverse(traverse_func);
-    void traverseConst(const_traverse_func);
+        // returns ERR_WEIGHT if any of vertices is out of the range
+        weight_t getWeight(grsize_t firstVertex, grsize_t secondVertex) const;
 
 private:
-    std::unordered_set<noderef_t, NodeRefHash> _neighbours;
+    grsize_t _vertexCount;
+    std::vector<weight_t> _weights;
 };
 
 #endif
