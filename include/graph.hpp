@@ -2,15 +2,15 @@
 #define GRAPH_H
 
 #include <vector>
-#include <limits.h>
+#include <float.h>
 
 class Graph {
 public:
     using grsize_t = std::size_t;
-    using weight_t = unsigned int;
+    using weight_t = float;
 
-    constexpr static weight_t WEIGHT_T_MIN = 0;
-    constexpr static weight_t WEIGHT_T_MAX = UINT_MAX;
+    constexpr static weight_t WEIGHT_T_MIN = FLT_MIN;
+    constexpr static weight_t WEIGHT_T_MAX = FLT_MAX;
 
     constexpr static weight_t ERR_WEIGHT = WEIGHT_T_MAX;
 

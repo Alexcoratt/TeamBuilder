@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "graph.h"
+#include "graph.hpp"
+#include "iograph.hpp"
 
-std::ostream &operator<<(std::ostream &, const Graph &);
-int fill(Graph &, std::istream &);
+typedef Graph::grsize_t grsize_t;
+typedef Graph::weight_t weight_t;
 
 int main(int argc, char **argv) {
     std::istream *input = nullptr;
@@ -20,68 +21,21 @@ int main(int argc, char **argv) {
         }
     }
 
-    Graph::grsize_t vertexCount = 0;
-    *input >> vertexCount;
+    grsize_t minTeamSize = 0, maxTeamSize = 0, memberCount = 0;
+    *input >> minTeamSize >> maxTeamSize >> memberCount;
 
-    if (vertexCount == 0) {
+    if (memberCount == 0) {
         std::cerr << "Error: no lines to read. Exiting\n";
         return 0;
     }
 
-    Graph gr(vertexCount);
+    Graph gr(memberCount);
     int res = fill(gr, *input);
-
-    if (res != 0)
-        return res;
-    
     if (input != &std::cin) delete input;
+    if (res != 0) return res;
 
     std::cout << gr << std::endl;
-
-    return 0;
-}
-
-std::ostream &operator<<(std::ostream &out, const Graph &gr) {
-    auto vcount = gr.getVertexCount();
-    for (decltype(vcount) i = 0; i < vcount; ++i) {
-        for (decltype(vcount) j = 0; j < vcount; ++j)
-            out << gr.getWeight(i, j) << ' ';
-        out << '\n';
-    }
-
-    return out;
-}
-
-int fill(Graph &gr, std::istream &input) {
-    Graph::weight_t weight = 1;
-    Graph::grsize_t firstVertex = 0, secondVertex = 0;
-    char delimiter = '\0';
-
-    while (!input.eof()) {
-        if (input >> secondVertex && !gr.setWeight(firstVertex, --secondVertex, weight)) {
-            std::cerr << "Error: given vertex " << std::max(firstVertex, secondVertex) << " is out of range " << gr.getVertexCount() << "\n";
-            return 2;
-        }
-
-        if (!input.good()) input.clear();
-
-        if (input >> delimiter) {
-            switch (delimiter) {
-                case ';':
-                    ++weight;
-                    break;
-                case '|':
-                    break;
-                case '/':
-                    ++firstVertex;
-                    weight = 1;
-                    break;
-                default:
-                    std::cerr << "Error: unknown delimiter \'" << delimiter << "\'\n";
-                    return 3;
-            }
-        }
-    }
+    std::cout << "min team size: " << minTeamSize << "\nmax team size: " << maxTeamSize << std::endl;
 
     return 0;
 }

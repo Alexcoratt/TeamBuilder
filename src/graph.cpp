@@ -1,4 +1,4 @@
-#include "graph.h"
+#include "graph.hpp"
 
 // constructors
     Graph::Graph(grsize_t vertexCount) : _vertexCount(vertexCount), _weights(vertexCount * vertexCount) {}
